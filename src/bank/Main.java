@@ -18,7 +18,7 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    sc.nextLine();
+                    sc.nextLine(); // consume newline
                     System.out.print("Enter Name: ");
                     String name = sc.nextLine();
                     System.out.print("Enter Initial Balance: ");
@@ -34,7 +34,7 @@ public class Main {
                     System.out.println("Exiting...");
                     System.exit(0);
 
-                case 4:
+                case 4: // Deposit option
                     System.out.print("Enter Account No: ");
                     int accNo = sc.nextInt();
                     System.out.print("Enter Amount to Deposit: ");
