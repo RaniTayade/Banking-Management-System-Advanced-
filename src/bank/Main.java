@@ -12,6 +12,7 @@ public class Main {
             System.out.println("1. Create Account");
             System.out.println("2. View All Accounts");
             System.out.println("3. Exit");
+            System.out.println("4. Deposit");
             System.out.print("Choose: ");
             int choice = sc.nextInt();
 
@@ -24,11 +25,23 @@ public class Main {
                     double bal = sc.nextDouble();
                     dao.createAccount(name, bal);
                     break;
+
                 case 2:
                     dao.getAllAccounts().forEach(System.out::println);
                     break;
+
                 case 3:
+                    System.out.println("Exiting...");
                     System.exit(0);
+
+                case 4:
+                    System.out.print("Enter Account No: ");
+                    int accNo = sc.nextInt();
+                    System.out.print("Enter Amount to Deposit: ");
+                    double amount = sc.nextDouble();
+                    dao.deposit(accNo, amount);
+                    break;
+
                 default:
                     System.out.println("Invalid choice!");
             }
