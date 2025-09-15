@@ -1,105 +1,110 @@
 #  Banking Management System (Java + MySQL)
 
-##  Project Overview
-This is a **Banking Management System** built using **Java, JDBC, and MySQL**.  
-It is designed as a **learning + academic project** to understand how Java applications can interact with relational databases.
-The system currently supports **account creation, deposit, and account viewing**, with upcoming features such as **withdrawals, login, transaction history, and loan management**.
-
+A simple **Bank Management System** built using **Java, JDBC, and MySQL**.  
+This project was developed as part of an academic learning exercise to practice Java, JDBC, and database integration.  
 
 ##  Features
-### Completed
-- Create new bank accounts  
-- View all existing accounts in the database  
-- Deposit money into an account  
+-  **User Login System** (Authentication using MySQL `users` table)  
+-  **Account Management**
+  - Create new bank accounts  
+  - View all accounts  
+-  **Transactions**
+  - Deposit money  
+  - Withdraw money (with balance check)  
+  - Transaction history (records stored in MySQL)  
+- 🗄 **Database Integration** using JDBC  
 
-
-### Coming Soon
-- Withdraw money from an account  
-- Transaction history (each deposit/withdrawal logged)  
-- Secure login system (username & password)  
-- Loan management (apply, approve, track loans)  
-- Admin dashboard (manage all accounts)  
-
-
-##  Tech Stack
-- **Language:** Java (JDK 8+)  
-- **Database:** MySQL  
-- **Connectivity:** JDBC  
-- **IDE (optional):** IntelliJ IDEA / Eclipse / NetBeans  
-- **Version Control:** Git & GitHub  
-
+##  Technologies Used
+- **Java (JDK 8+)** – Core logic  
+- **JDBC** – Database connectivity  
+- **MySQL** – Database for accounts, users, transactions  
+- **MySQL Workbench** – Query management
+- 
 
 ##  Project Structure
-Banking-Management-System/
-│── src/
-│ └── bank/
-│ ├── Main.java # Entry point with menu system
-│ ├── DatabaseConnection.java # Manages DB connection
-│ ├── Account.java # Model class (POJO)
-│ └── AccountDAO.java # Data Access Object (CRUD + deposit)
+banking-management-system/
 │
-└── README.md
+├── src/bank/
+│ ├── Main.java # Main program with menu
+│ ├── DatabaseConnection.java # JDBC connection utility
+│ ├── Account.java # Account model (POJO)
+│ ├── AccountDAO.java # Data Access Object for accounts
+│ ├── UserDAO.java # Data Access Object for user login
+│
+└── README.md # Project documentation
 
 
 ##  Database Setup
-1. Open **MySQL Workbench** (or terminal).  
-2. Run the following SQL commands:
-   ```sql
-   CREATE DATABASE bankdb;
+Run the following script in **MySQL Workbench**:
 
-   USE bankdb;
+```sql
+-- Create database
+CREATE DATABASE IF NOT EXISTS bankdb;
+USE bankdb;
 
-   CREATE TABLE accounts (
-       acc_no INT AUTO_INCREMENT PRIMARY KEY,
-       name VARCHAR(100) NOT NULL,
-       balance DOUBLE DEFAULT 0
-   );
-Update your DB credentials in DatabaseConnection.java:
-java
-private static final String URL = "jdbc:mysql://localhost:3306/bankdb";
-private static final String USER = "root";     
-private static final String PASSWORD = "root"; 
+-- Accounts table
+CREATE TABLE IF NOT EXISTS accounts (
+    acc_no INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    balance DOUBLE DEFAULT 0
+);
 
+-- Transactions table
+CREATE TABLE IF NOT EXISTS transactions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    acc_no INT,
+    type VARCHAR(20),
+    amount DOUBLE,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (acc_no) REFERENCES accounts(acc_no)
+);
+
+-- Users table
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE,
+    password VARCHAR(100) NOT NULL
+);
+
+-- Insert default user
+INSERT INTO users (username, password) VALUES ('admin', 'admin123');
 
 ## How to Run
-Clone this repository:
-bash
-git clone https://github.com/your-username/Banking-Management-System.git
-Open project in IntelliJ/Eclipse/NetBeans.
-Make sure MySQL server is running.
-Compile & run Main.java.
-You’ll see menu options:
-markdown
+Clone or download this repository.
+Import the project into your Java IDE (Eclipse, IntelliJ, or NetBeans).
+Update DatabaseConnection.java with your MySQL username & password:
+
+java
+private static final String URL = "jdbc:mysql://localhost:3306/bankdb";
+private static final String USER = "root";
+private static final String PASSWORD = "root"; // change if needed
+Run Main.java.
+Login with default credentials:
+makefile
+Username: admin
+Password: admin123
+
+Sample Menu
+=== Banking System Login ===
+Enter Username: admin
+Enter Password: admin123
+Login successful! Welcome, admin
+
 === Bank Menu ===
 1. Create Account
 2. View All Accounts
 3. Exit
 4. Deposit
+5. Withdraw
+6. View Transaction History
+ Future Enhancements
+ Secure password hashing (BCrypt)
 
-
-## Commit History (Planned)
-Commit 1: Setup project structure
-Commit 2: Add Account model class
-Commit 3: Add DB connection helper
-Commit 4: Add AccountDAO with create & fetch
-Commit 5: Update Main.java with menu options
-Commit 6: Add deposit method in DAO
-Commit 7: Integrate deposit option in menu
-Commit 8+: Withdraw, login, history, loans
-
-
-## Contribution
-Want to improve this project?
-Fork the repo
-Create a new branch
-Add your feature/fix
-Submit a Pull Request 
-
+## User Registration (sign up new users)
+ Loan Management module
+ Role-based access (Admin vs User)
+ Better console UI
 
 ## Author
 Rani Tayade
-
-
-## License
-This project is for educational purposes only.
-You are free to use and modify it.
+Full Stack Java Developer Intern
