@@ -1,5 +1,6 @@
 package bank;
 
+import java.sql.*;
 import java.util.Scanner;
 
 public class Main {
@@ -14,12 +15,13 @@ public class Main {
             System.out.println("3. Exit");
             System.out.println("4. Deposit");
             System.out.println("5. Withdraw");
+            System.out.println("6. View Transaction History"); // NEW
             System.out.print("Choose: ");
             int choice = sc.nextInt();
 
             switch (choice) {
                 case 1:
-                    sc.nextLine(); 
+                    sc.nextLine();
                     System.out.print("Enter Name: ");
                     String name = sc.nextLine();
                     System.out.print("Enter Initial Balance: ");
@@ -35,7 +37,7 @@ public class Main {
                     System.out.println("Exiting...");
                     System.exit(0);
 
-                case 4: // Deposit
+                case 4:
                     System.out.print("Enter Account No: ");
                     int accNo = sc.nextInt();
                     System.out.print("Enter Amount to Deposit: ");
@@ -43,7 +45,7 @@ public class Main {
                     dao.deposit(accNo, amount);
                     break;
 
-                case 5: // Withdraw
+                case 5:
                     System.out.print("Enter Account No: ");
                     int accNoW = sc.nextInt();
                     System.out.print("Enter Amount to Withdraw: ");
@@ -51,9 +53,35 @@ public class Main {
                     dao.withdraw(accNoW, amountW);
                     break;
 
+                case 6:
+                    System.out.print("Enter Account No: ");
+                    int accNoT = sc.nextInt();
+                    showTransactions(accNoT);
+                    break;
+
                 default:
                     System.out.println("Invalid choice!");
             }
+        }
+    }
+
+    // Helper method  to display transactions
+    private static void showTransactions(int accNo) {
+        String sql = "SELECT * FROM transactions WHERE acc_no = ? ORDER BY timestamp DESC";
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, accNo);
+            ResultSet rs = ps.executeQuery();
+            System.out.println("\n--- Transaction History ---");
+            while (rs.next()) {
+                System.out.println(
+                        rs.getString("type") + " - " +
+                                rs.getDouble("amount") + " - " +
+                                rs.getTimestamp("timestamp")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

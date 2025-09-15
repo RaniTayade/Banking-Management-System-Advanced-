@@ -50,6 +50,7 @@ public class AccountDAO {
             int rows = ps.executeUpdate();
             if (rows > 0) {
                 System.out.println("Deposit successful!");
+                logTransaction(accNo, "DEPOSIT", amount);
             } else {
                 System.out.println("Account not found.");
             }
@@ -58,20 +59,35 @@ public class AccountDAO {
         }
     }
 
-    // Withdraw money from an account (NEW in Commit 8)
+    // Withdraw money from an account
     public void withdraw(int accNo, double amount) {
         String sql = "UPDATE accounts SET balance = balance - ? WHERE acc_no = ? AND balance >= ?";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setDouble(1, amount);
             ps.setInt(2, accNo);
-            ps.setDouble(3, amount); // prevent negative balance
+            ps.setDouble(3, amount); // prevent overdraft
             int rows = ps.executeUpdate();
             if (rows > 0) {
                 System.out.println("Withdrawal successful!");
+                logTransaction(accNo, "WITHDRAW", amount);
             } else {
                 System.out.println("Insufficient balance or account not found.");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Log transaction into DB
+    private void logTransaction(int accNo, String type, double amount) {
+        String sql = "INSERT INTO transactions(acc_no, type, amount) VALUES(?, ?, ?)";
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, accNo);
+            ps.setString(2, type);
+            ps.setDouble(3, amount);
+            ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
