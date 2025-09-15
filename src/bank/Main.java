@@ -6,8 +6,23 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        UserDAO userDao = new UserDAO();
         AccountDAO dao = new AccountDAO();
 
+        // --- LOGIN STEP ---
+        System.out.println("=== Banking System Login ===");
+        System.out.print("Enter Username: ");
+        String uname = sc.nextLine();
+        System.out.print("Enter Password: ");
+        String pass = sc.nextLine();
+
+        if (!userDao.login(uname, pass)) {
+            System.out.println("Invalid credentials. Exiting...");
+            System.exit(0);
+        }
+        System.out.println("✅ Login successful! Welcome, " + uname);
+
+        // --- MAIN MENU ---
         while (true) {
             System.out.println("\n=== Bank Menu ===");
             System.out.println("1. Create Account");
@@ -15,7 +30,7 @@ public class Main {
             System.out.println("3. Exit");
             System.out.println("4. Deposit");
             System.out.println("5. Withdraw");
-            System.out.println("6. View Transaction History"); // NEW
+            System.out.println("6. View Transaction History");
             System.out.print("Choose: ");
             int choice = sc.nextInt();
 
@@ -65,7 +80,7 @@ public class Main {
         }
     }
 
-    // Helper method  to display transactions
+    // Show transactions
     private static void showTransactions(int accNo) {
         String sql = "SELECT * FROM transactions WHERE acc_no = ? ORDER BY timestamp DESC";
         try (Connection con = DatabaseConnection.getConnection();
