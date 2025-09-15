@@ -13,12 +13,13 @@ public class Main {
             System.out.println("2. View All Accounts");
             System.out.println("3. Exit");
             System.out.println("4. Deposit");
+            System.out.println("5. Withdraw");
             System.out.print("Choose: ");
             int choice = sc.nextInt();
 
             switch (choice) {
                 case 1:
-                    sc.nextLine();
+                    sc.nextLine(); 
                     System.out.print("Enter Name: ");
                     String name = sc.nextLine();
                     System.out.print("Enter Initial Balance: ");
@@ -33,13 +34,21 @@ public class Main {
                 case 3:
                     System.out.println("Exiting...");
                     System.exit(0);
-// Deposit Option 
-                case 4:
+
+                case 4: // Deposit
                     System.out.print("Enter Account No: ");
                     int accNo = sc.nextInt();
                     System.out.print("Enter Amount to Deposit: ");
                     double amount = sc.nextDouble();
                     dao.deposit(accNo, amount);
+                    break;
+
+                case 5: // Withdraw
+                    System.out.print("Enter Account No: ");
+                    int accNoW = sc.nextInt();
+                    System.out.print("Enter Amount to Withdraw: ");
+                    double amountW = sc.nextDouble();
+                    dao.withdraw(accNoW, amountW);
                     break;
 
                 default:

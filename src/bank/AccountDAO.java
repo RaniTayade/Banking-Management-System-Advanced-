@@ -57,4 +57,23 @@ public class AccountDAO {
             e.printStackTrace();
         }
     }
+
+    // Withdraw money from an account (NEW in Commit 8)
+    public void withdraw(int accNo, double amount) {
+        String sql = "UPDATE accounts SET balance = balance - ? WHERE acc_no = ? AND balance >= ?";
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setDouble(1, amount);
+            ps.setInt(2, accNo);
+            ps.setDouble(3, amount); // prevent negative balance
+            int rows = ps.executeUpdate();
+            if (rows > 0) {
+                System.out.println("Withdrawal successful!");
+            } else {
+                System.out.println("Insufficient balance or account not found.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
